@@ -58,5 +58,14 @@ def get_iou(old, new):
     assert iou <= 1.0
     return iou
 
-def merge_boxes(a, b, threshold = 0.5):
-    pass
+def merge_boxes(boxes, threshold = 0.5):
+    if len(boxes) < 2: return boxes
+
+    combined_boxes = []
+    disgarded_boxes = []
+
+    for i, firstbox in enumerate(boxes):
+        if i in disgarded_boxes: continue
+        for j, secondbox in enumerate(boxes[i+1:]):
+            if j in disgarded_boxes: continue
+            overlap = get_iou(firstbox, secondbox)
