@@ -37,7 +37,10 @@ def display(disp, secondary, third, forth):
 
 
 if __name__ == "__main__":
-    cap = cv2.VideoCapture(1)
+    if sys.platform =="win32":
+        cap = cv2.VideoCapture(1)
+    else:
+        cap = cv2.VideoCapture(0)
     _, oldframe = cap.read()
     _, lastframe = cap.read()
     frame_queue = SimpleQueue()
