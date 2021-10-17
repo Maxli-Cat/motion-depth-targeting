@@ -2,7 +2,7 @@ import cv2
 from queue import Queue, SimpleQueue
 import time
 import bounding_box_functions
-
+import sys
 
 def box_centered(box, size):
     size = size // 2
@@ -26,6 +26,16 @@ def draw_crosshair(image, box, size, color = (0,0,255)):
     cv2.line(image, (cx, cy+(size*2)), (cx, (cy-(size*2))), color, 2)
     cv2.line(image, (cx+(size*2), cy), (cx-(size*2), (cy)), color, 2)
 
+def display(disp, secondary, third, forth):
+    if sys.platform == "linux":
+        cv2.imshow("fullscreen", disp)
+    else:
+        cv2.imshow("main", disp)
+        cv2.imshow("second", secondary)
+        cv2.imshow("third", third)
+        cv2.imshow("forth", forth)
+
+
 if __name__ == "__main__":
     cap = cv2.VideoCapture(1)
     _, oldframe = cap.read()
@@ -33,6 +43,10 @@ if __name__ == "__main__":
     frame_queue = SimpleQueue()
     recent_frames = []
     shorter_recent_frames = []
+
+    if sys.platform == "linux": #raspberry pi
+        cv2.namedWindow("fullscreen", cv2.WND_PROP_FULLSCREEN)
+        cv2.setWindowProperty("fullscreen", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 
     while True:
         tick = time.time()
@@ -87,11 +101,11 @@ if __name__ == "__main__":
                 cv2.rectangle(dispframe, (x, y), (x + w, y + h), (0, 255, 0), 3)
             #print(x,y,w,h)
 
-        cv2.imshow("newframe", dispframe)
-        cv2.imshow("diff", threshed)
-        cv2.imshow("overlay", underlayed)
-        cv2.imshow("boxy?", boxy)
-
+        #cv2.imshow("newframe", dispframe)
+        #cv2.imshow("diff", threshed)
+        #cv2.imshow("overlay", underlayed)
+        #cv2.imshow("boxy?", boxy)
+        display(dispframe, threshed, underlayed, boxy)
 
         oldframe = frame
         #frame_queue.put(frame)
