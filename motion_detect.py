@@ -1,6 +1,30 @@
 import cv2
 from queue import Queue, SimpleQueue
 import time
+import bounding_box_functions
+
+
+def box_centered(box, size):
+    size = size // 2
+    x,y,w,h = box
+    cx = x + (w//2)
+    cy = y + (h//2)
+    bounds = ( (cx - size, cy - size), (cx + size, cy + size))
+    return bounds
+
+def box_center(box):
+    x, y, w, h = box
+    cx = x + (w // 2)
+    cy = y + (h // 2)
+    return (cx, cy)
+
+def draw_crosshair(image, box, size, color = (0,0,255)):
+    center = box_center(box)
+    cx, cy = center
+    frame = box_centered(box, size)
+    cv2.rectangle(image, *frame, color, 2)
+    cv2.line(image, (cx, cy+(size*2)), (cx, (cy-(size*2))), color, 2)
+    cv2.line(image, (cx+(size*2), cy), (cx-(size*2), (cy)), color, 2)
 
 if __name__ == "__main__":
     cap = cv2.VideoCapture(1)
@@ -9,7 +33,6 @@ if __name__ == "__main__":
     frame_queue = SimpleQueue()
     recent_frames = []
     shorter_recent_frames = []
-
 
     while True:
         tick = time.time()
@@ -34,7 +57,6 @@ if __name__ == "__main__":
         for f in shorter_recent_frames:
             boxy = cv2.add(boxy, f)
 
-
         boxy = cv2.cvtColor(boxy, cv2.COLOR_BGR2GRAY)
         boxy = cv2.threshold(boxy, 30,255, cv2.THRESH_BINARY)[1]
 
@@ -44,7 +66,7 @@ if __name__ == "__main__":
         while len(recent_frames) > 40:
             recent_frames.pop(0)
 
-        while len(shorter_recent_frames) > 10:
+        while len(shorter_recent_frames) > 7:
             shorter_recent_frames.pop(0)
 
         dispframe = frame.copy()
@@ -60,9 +82,10 @@ if __name__ == "__main__":
             (x, y, w, h) = cv2.boundingRect(contour)
             if i == 0:
                 cv2.rectangle(dispframe, (x, y), (x + w, y + h), (0, 0, 255), 3)
+                draw_crosshair(dispframe, (x,y,w,h), 15)
             else:
                 cv2.rectangle(dispframe, (x, y), (x + w, y + h), (0, 255, 0), 3)
-            print(x,y,w,h)
+            #print(x,y,w,h)
 
         cv2.imshow("newframe", dispframe)
         cv2.imshow("diff", threshed)
