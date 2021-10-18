@@ -3,8 +3,8 @@ import numpy as np
 from matplotlib import pylab as plt
 
 if __name__ == "__main__":
-    left_name  = "C:\\Users\\Maxli\\Pictures\\Camera Roll\\WIN_20211016_21_10_09_Pro.jpg"
-    right_name = "C:\\Users\\Maxli\\Pictures\\Camera Roll\\WIN_20211016_21_10_17_Pro.jpg"
+    left_name  = "C:\\Users\\Maxli\\Pictures\\Camera Roll\\WIN_20211017_22_19_49_Pro.jpg"
+    right_name = "C:\\Users\\Maxli\\Pictures\\Camera Roll\\WIN_20211017_22_19_53_Pro.jpg"
 
     left  = cv2.imread(left_name,0)
     right = cv2.imread(right_name,0)
