@@ -1,4 +1,5 @@
 import cv2
+import time
 import numpy as np
 from matplotlib import pylab as plt
 
@@ -20,6 +21,9 @@ if __name__ == "__main__":
     #plt.imshow(disparity, 'disparity')
     #plt.xticks([])
     #plt.yticks([])
-    cv2.imshow("window", disparity)
+    for i in range(1,1000, 100):
+        cv2.imshow("window", disparity / i)
+        print(i)
+        time.sleep(.2)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
